@@ -14,6 +14,43 @@ impl Dial {
         }
     }
 
+    fn rotate_clicks_right(&mut self, steps: i32) {
+        print!("{0}: R{1}\n  ", self.position, steps);
+        for _ in 0..steps {
+            self.position = self.position + 1;
+            print!("{0}", self.position);
+            while self.position > 99 {
+                self.position = self.position - 100;
+                print!("W{0}", self.position);
+            }
+            if self.position == 0 {
+                print!("HIT");
+                self.zero_count = self.zero_count + 1;
+                print!("{0}", self.position);
+            }
+            print!(" ");
+        }
+        println!("COUNT: {0}", self.zero_count);
+    }
+
+    fn rotate_clicks_left(&mut self, steps: i32) {
+        print!("{0}: L{1}\n  ", self.position, steps);
+        for _ in 0..steps {
+            self.position = self.position - 1;
+            print!("{0}", self.position);
+            if self.position < 0 {
+                self.position = self.position + 100;
+                print!("W{0}", self.position);
+            }
+            if self.position == 0 {
+                print!("HIT");
+                self.zero_count = self.zero_count + 1;
+            }
+            print!(" ");
+        }
+        println!("\nCOUNT: {0}", self.zero_count);
+    }
+
     fn rotate_right(&mut self, steps: i32) {
         let mut initial_position = self.position.clone();
         self.position = self.position + steps;
@@ -46,10 +83,12 @@ impl Dial {
 
     fn rotate_from_line(&mut self, line: &str) {
         if line.chars().nth(0).unwrap() == 'R' {
-            self.rotate_right(line[1..].parse::<i32>().unwrap());
+            //self.rotate_right(line[1..].parse::<i32>().unwrap());
+            self.rotate_clicks_right(line[1..].parse::<i32>().unwrap());
         }
         else {
-            self.rotate_left(line[1..].parse::<i32>().unwrap());
+            //self.rotate_left(line[1..].parse::<i32>().unwrap());
+            self.rotate_clicks_left(line[1..].parse::<i32>().unwrap());
         }
     }
 
@@ -72,7 +111,7 @@ fn main() {
                     let line = line.unwrap();
                     let initial_dial = dial.get_position();
                     dial.rotate_from_line(&line);
-                    println!("DEBUG {0} -> {1} -> {2} PASS {3}", initial_dial, line, dial.get_position(), dial.get_count());
+                    println!("");
                 }
                 dial.get_count()
             });
