@@ -51,43 +51,11 @@ impl Dial {
         println!("\nCOUNT: {0}", self.zero_count);
     }
 
-    fn rotate_right(&mut self, steps: i32) {
-        let mut initial_position = self.position.clone();
-        self.position = self.position + steps;
-        while self.position > 99 {
-            self.position = self.position - 100;
-            if initial_position != 0 && self.position != 0 {
-                self.zero_count = self.zero_count + 1;
-            }
-            initial_position = self.position.clone();
-        }
-        if self.position == 0 {
-            self.zero_count = self.zero_count + 1;
-        }
-    }
-
-    fn rotate_left(&mut self, steps: i32) {
-        let mut initial_position = self.position.clone();
-        self.position = self.position - steps;
-        while self.position < 0 {
-            self.position = self.position + 100;
-            if initial_position != 0 && self.position != 0 {
-                self.zero_count = self.zero_count + 1;
-            }
-            initial_position = self.position.clone();
-        }
-        if self.position == 0 {
-            self.zero_count = self.zero_count + 1
-        }
-    }
-
     fn rotate_from_line(&mut self, line: &str) {
         if line.chars().nth(0).unwrap() == 'R' {
-            //self.rotate_right(line[1..].parse::<i32>().unwrap());
             self.rotate_clicks_right(line[1..].parse::<i32>().unwrap());
         }
         else {
-            //self.rotate_left(line[1..].parse::<i32>().unwrap());
             self.rotate_clicks_left(line[1..].parse::<i32>().unwrap());
         }
     }
@@ -109,7 +77,6 @@ fn main() {
             .map(|reader| {
                 for line in reader.lines() {
                     let line = line.unwrap();
-                    let initial_dial = dial.get_position();
                     dial.rotate_from_line(&line);
                     println!("");
                 }
