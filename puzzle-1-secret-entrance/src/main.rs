@@ -60,9 +60,6 @@ impl Dial {
         }
     }
 
-    fn get_position(&self) -> i32 {
-        self.position
-    }
     fn get_count(&self) -> i32 {
         self.zero_count
     }
