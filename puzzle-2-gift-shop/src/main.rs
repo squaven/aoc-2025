@@ -18,12 +18,12 @@ impl Id {
         let value_string = self.value.to_string();
         let mut valid = true;
         // For every possible split across the length of the value
-        'outer: for i in 2..value_string.len() {
+        'outer: for i in 2..value_string.len()+1 {
             // If evenly divisble
             if value_string.len() % i == 0 {
                 let sub_len = value_string.len() / i;
                 let mut prev = "previous";
-                let mut cur = "current";
+                let mut cur = &value_string[..];
                 while !cur.is_empty() {
                     // Divide into substring
                     let (chunk, rest) = cur.split_at(cmp::min(sub_len, cur.len()));
@@ -34,24 +34,25 @@ impl Id {
                 }
                 // If divisible and none don't match, then false.
                 valid = false;
+                break;
             }
         }
         valid
     }
 
-    fn is_valid(&self) -> bool {
-        let value_string = self.value.to_string();
-        let value_length = value_string.len();
-        if value_length % 2 == 0 {
-            let sub_length = value_length / 2;
-            let first = value_string[0..sub_length].to_string();
-            let second = value_string[sub_length..value_length].to_string();
-            if first == second {
-                return false;
-            }
-        }
-        true
-    }
+    // fn is_valid_double(&self) -> bool {
+    //     let value_string = self.value.to_string();
+    //     let value_length = value_string.len();
+    //     if value_length % 2 == 0 {
+    //         let sub_length = value_length / 2;
+    //         let first = value_string[0..sub_length].to_string();
+    //         let second = value_string[sub_length..value_length].to_string();
+    //         if first == second {
+    //             return false;
+    //         }
+    //     }
+    //     true
+    // }
 
     fn get_value(&self) -> usize {
         self.value
@@ -91,8 +92,9 @@ fn main() {
                 ids
                     .into_iter()
                     .fold(0, |acc, id| {
-                        if ! id.is_valid() {
-                            println!("BAD {0}", id.get_value());
+                        //if ! id.is_valid_double() {
+                        if ! id.is_valid_repeating() {
+                            println!("  BAD {0}", id.get_value());
                             acc + id.get_value()
                         }
                         else { acc }
