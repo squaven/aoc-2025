@@ -1,3 +1,4 @@
+use std::env;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
@@ -90,8 +91,18 @@ impl Bank {
 }
 
 fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    let input_file =  {
+        if args.len() > 1 {
+            if args[1] == "-e" { "example.txt" }
+            else { "input.txt" }
+        }
+        else { "input.txt" }
+    };
+
     let highest_joltages =
-        File::open("input.txt")
+        File::open(input_file)
             .map(|file| BufReader::new(file))
             .map(|reader| {
                 let mut bank_vec: Vec<usize> = Vec::new();
